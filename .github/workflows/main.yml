@@ -28,4 +28,4 @@ jobs:
 
     - name: Build and Deploy with Docker Compose
       run: |
-        ssh -i ~/.ssh/id_rsa 52.56.201.243 'cd /path/to/your/app && docker-compose pull && docker-compose up -d'
+        ssh -i ~/.ssh/id_rsa 52.56.201.243 'cd /home/ubuntu/django-book-store-ibt && docker-compose pull && docker-compose up -d'
