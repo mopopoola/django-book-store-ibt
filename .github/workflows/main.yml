@@ -41,8 +41,7 @@ jobs:
           echo "Setting up SSH key..."
           echo "${PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+          echo -e "Host ec2-52-56-201-243.eu-west-2.compute.amazonaws.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
           cat ~/.ssh/id_rsa  # Display the content for debugging
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
