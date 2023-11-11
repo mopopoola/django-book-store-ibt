@@ -44,12 +44,14 @@ jobs:
           cat ~/.ssh/id_rsa  # Display the content for debugging
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-      
-      
 
       - name: Copy SSH known hosts
         run: |
+          mkdir -p ~/.ssh
+          echo "Copying known hosts..."
           echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          cat ~/.ssh/known_hosts  # Display the content for debugging
         env:
           KNOWN_HOSTS: ${{ secrets.EC2_SSH_KNOWN_HOSTS }}
 
