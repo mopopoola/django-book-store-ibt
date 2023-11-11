@@ -43,4 +43,5 @@ jobs:
 
       - name: SSH into EC2 instance and pull changes
         run: |
-          ssh -i ~/.ssh/id_rsa ec2-user@your-ec2-instance-ip 'cd /path/to/your/app && git pull'
+          ssh -i ~/.ssh/id_rsa ec2-user@ec2-52-56-201-243.eu-west-2.compute.amazonaws.com
+          'cd /path/to/your/app && git pull'
