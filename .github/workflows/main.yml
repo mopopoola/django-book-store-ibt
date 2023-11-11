@@ -25,3 +25,33 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/django-book-store-ibt:latest
+
+          name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main https://github.com/mopopoola/django-book-store-ibt.git
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ec2-52-56-201-243.eu-west-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+
+      - name: Deploy Code to EC2
+        run: |
+          rsync -r --delete-after --quiet $GITHUB_WORKSPACE/ ec2-user@your-ec2-ip-address:/path/to/your/app
+
+      - name: SSH into EC2 and Restart App
+        run: |
+          ssh ec2-user@ec2-52-56-201-243.eu-west-2.compute.amazonaws.com 'cd /path/to/your/app && ./restart.sh' # Change as needed
