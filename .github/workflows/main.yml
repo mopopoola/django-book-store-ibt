@@ -1,31 +1,27 @@
-name: Deploy to EC2
-
+name: Book Store CI/CD
 on:
   push:
-    branches:
-      - main
-
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 jobs:
-  deploy:
+  build-Docker-Image:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
 
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "$EC2_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        echo -e "Host 52.56.201.243\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN  }}
 
-    - name: Install Docker and Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
-        sudo apt-get install -y docker-compose
-
-    - name: Build and Deploy with Docker Compose
-      run: |
-        ssh -i ~/.ssh/id_rsa 52.56.201.243 'cd /home/ubuntu/django-book-store-ibt && docker-compose pull && docker-compose up -d'
+      - name: setup docker build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/django-book-store-ibt:latest
