@@ -57,4 +57,5 @@ jobs:
 
       - name: SSH into EC2 instance and pull changes
         run: |
-          ssh -i ~/.ssh/id_rsa ec2-user@ec2-52-56-201-243.eu-west-2.compute.amazonaws.com 'cd /home/ubuntu/django-book-store-ibt && git pull'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@ec2-52-56-201-243.eu-west-2.compute.amazonaws.com 'cd /home/ubuntu/django-book-store-ibt && git pull'
+        
