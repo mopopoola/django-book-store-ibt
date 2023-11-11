@@ -35,16 +35,12 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
 
-      - name: Setup SSH
+      - name: SSH into EC2 instance and pull changes
         run: |
-          mkdir -p ~/.ssh
-          echo "Setting up SSH key..."
-          echo "${PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo -e "Host ec2-52-56-201-243.eu-west-2.compute.amazonaws.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-          cat ~/.ssh/id_rsa  # Display the content for debugging
+          ssh -o StrictHostKeyChecking=no -i <(echo "$PRIVATE_KEY") ec2-user@ec2-52-56-201-243.eu-west-2.compute.amazonaws.com 'cd /home/ubuntu/django-book-store-ibt && git pull'
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      
 
       - name: Copy SSH known hosts
         run: |
