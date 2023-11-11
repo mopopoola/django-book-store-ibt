@@ -37,10 +37,14 @@ jobs:
 
       - name: Setup SSH
         run: |
+          mkdir -p ~/.ssh
+          echo "Setting up SSH key..."
           echo "${PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa  # Display the content for debugging
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      
       
 
       - name: Copy SSH known hosts
