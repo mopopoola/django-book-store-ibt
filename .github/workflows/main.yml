@@ -31,7 +31,7 @@ jobs:
       - name: Deploy Docker compose
         uses: appleboy/ssh-action@master
         with:
-            host: 52.56.201.243
+            host: 18.170.217.102
             username: ubuntu
             key: ${{ secrets.EC2_KEY }}
             script: |
