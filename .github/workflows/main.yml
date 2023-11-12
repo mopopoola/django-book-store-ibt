@@ -1,27 +1,41 @@
 name: Book Store CI/CD
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+
 jobs:
   build-Docker-Image:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v2
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN  }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: setup docker build
+      - name: Setup Docker build
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/django-book-store-ibt:latest
+
+      - name: Deploy docker compose
+        uses: appleboy/ssh-action@master
+        with:
+            host: 52.56.201.243
+            username: ubuntu
+            key: ${{ secrets.EC2_KEY }}
+            script: |
+              cd /home/ubuntu/django-book-store-ibt
+              git pull origin main
+              docker-compose --rmi all
+              docker-compose up -d
