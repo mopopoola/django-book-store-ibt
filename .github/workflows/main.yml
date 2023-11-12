@@ -28,7 +28,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/django-book-store-ibt:latest
 
-      - name: Deploy docker compose
+      - name: Deploy Docker compose
         uses: appleboy/ssh-action@master
         with:
             host: 52.56.201.243
@@ -37,5 +37,5 @@ jobs:
             script: |
               cd /home/ubuntu/django-book-store-ibt
               git pull origin main
-              docker-compose --rmi all
+              docker-compose down --rmi all
               docker-compose up -d
