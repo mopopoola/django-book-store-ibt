@@ -37,5 +37,5 @@ jobs:
             script: |
               cd /home/ubuntu/django-book-store-ibt
               git pull origin main
-              docker-compose --rmi all
+              docker-compose down --rmi all
               docker-compose up -d
